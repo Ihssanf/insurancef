@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Gestion des Contrats</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+  <style>
+    body {
+      background-image: url("https://www.odcplus.com/wp-content/uploads/2023/08/Formation-ASSURANCE-Maroc.jpg");
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      color: #fff;
+      font-family: 'Arial', sans-serif;
+      display: flex;
+      align-items: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .container {
+      background-color: rgba(0, 0, 0, 0.8); /* Slightly darker overlay */
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 40px;
+      font-size: 3rem;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+      color: #007bff; /* Use a primary color */
+    }
+
+    table {
+      color: #fff;
+    }
+
+    th {
+      background-color: rgba(255, 255, 255, 0.2);
+      padding: 10px;
+      font-weight: bold;
+      color: #fff;
+    }
+
+    /* Make contract list text white */
+    table.table.table-striped tbody td {
+      color: #fff;
+    }
+
+    td {
+      padding: 8px;
+    }
+
+    .btn {
+      margin-right: 10px;
+      padding: 12px 25px;
+      font-size: 1rem;
+      border-radius: 5px;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .btn-primary {
+      background-color: #007bff;
+      border: none;
+    }
+
+    .btn-primary:hover {
+      background-color: #0056b3;
+    }
+
+    .btn-danger {
+      background-color: #dc3545;
+      border: none;
+    }
+
+    .btn-danger:hover {
+      background-color: #c82333;
+    }
+
+    .btn-success {
+      background-color: #28a745;
+      border: none;
+    }
+
+    .btn-success:hover {
+      background-color: #218838;
+    }
+
+    .btn-secondary {
+      background-color: #6c757d;
+      border: none;
+    }
+
+    .btn-secondary:hover {
+      background-color: #5a6268;
+    }
+
+    /* Modal Styling */
+    .modal-dialog {
+      max-width: 500px;
+      margin: 1.75rem auto;
+    }
+
+    .modal-content {
+      background-color: #212529;
+      color: #fff;
+      border: 1px solid #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .modal-header {
+      background-color: #dc3545;
+      border-bottom: 1px solid #fff;
+      border-radius: 10px 10px 0 0;
+    }
+
+    .modal-header .close {
+      color: #fff;
+      opacity: 1;
+      text-shadow: none;
+    }
+
+    .modal-body {
+      padding: 20px;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1 class="mt-4 text-center">Liste des Contrats</h1>
+
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th>Date de Début</th>
+      <th>Date de Fin</th>
+      <th>Client</th>
+      <th>Assurance</th>
+      <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="contrat : ${contrats}">
+      <td th:text="${contrat.dateDebut}"></td>
+      <td th:text="${contrat.dateFin}"></td>
+      <td th:text="${contrat.client.nom} + ' ' + ${contrat.client.prenom}"></td>
+      <td th:text="${contrat.assurance.type} + ' ' + ${contrat.assurance.couverture}"></td>
+      <td>
+        <a th:href="@{/edit-contract/{id}(id=${contrat.id})}" class="btn btn-primary">Modifier</a>
+        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal"
+                th:data-id="${contrat.id}" th:data-name="${contrat.client.nom} + ' ' + ${contrat.client.prenom} + ' - ' + ${contrat.assurance.type} + ' - ' + ${contrat.assurance.couverture}">
+          Supprimer
+        </button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <a href="/add-contract" class="btn btn-success">Ajouter un contrat</a>
+  <a href="/" class="btn btn-secondary">Accueil</a>
+
+  <!-- Modal for Confirmation -->
+  <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteModalLabel">Confirmation de suppression</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>Êtes-vous sûr de vouloir supprimer le contrat <span id="contractName"></span> ? Cette action est irréversible.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+          <a href="#" id="deleteConfirmation" class="btn btn-danger">Supprimer</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+  $(document).ready(function () {
+    // Handle the delete modal event
+    $('#deleteModal').on('show.bs.modal', function (event) {
+      var button = $(event.relatedTarget);
+      var id = button.data('id');
+      var name = button.data('name');
+
+      var deleteLink = $('#deleteConfirmation');
+      deleteLink.attr('href', '/delete-contract/' + id);
+
+      var modal = $(this);
+      modal.find('.modal-body #contractName').text(name);
+    });
+  });
+</script>
+</body>
+</html>

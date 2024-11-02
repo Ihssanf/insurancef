@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Gestion des Assurances</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+  <style>
+    body {
+      background-image: url("/pixelcut-export.jpeg"); /* Updated to use the image from the static folder */
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      background-blend-mode: multiply; /* Blend the background image */
+      color: #fff;
+      font-family: 'Roboto', sans-serif;
+      display: flex;
+      align-items: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .container {
+      background-color: rgba(0, 0, 0, 0.7);
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 40px;
+      font-size: 3rem;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+      color: #007bff;
+    }
+
+    .card-group {
+      margin-bottom: 30px;
+    }
+
+    .card {
+      background-color: rgba(255, 255, 255, 0.5); /* Slightly tinted white */
+      border: 2px solid #fff;
+      border-radius: 10px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-10px);
+    }
+
+    .card-body {
+      color: #fff;
+      padding: 20px;
+    }
+
+    .card-title {
+      font-size: 1.8rem;
+      margin-bottom: 15px;
+      color: #007bff;
+      font-weight: bold;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+    }
+
+    .card-text {
+      color: #fff;
+      font-size: 1.1rem;
+    }
+
+    .btn {
+      padding: 12px 25px;
+      font-size: 1rem;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-primary {
+      background-color: #007bff;
+      border: none;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-primary:hover {
+      background-color: #0056b3;
+    }
+
+    .btn-secondary {
+      background-color: #6c757d;
+      border: none;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-secondary:hover {
+      background-color: #5a6268;
+    }
+
+    /* Additional Styling */
+    .container {
+      background-color: rgba(0, 0, 0, 0.8);
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1 class="mt-4 text-center">Gestion des Assurances</h1>
+
+  <div class="card-group">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Gestion des Assurances</h5>
+        <p class="card-text">Accéder à la liste des assurances disponibles, ajouter, modifier et supprimer des assurances.</p>
+        <a href="/assurances" class="btn btn-primary">Accéder aux Assurances <i class="fas fa-arrow-right"></i></a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Gestion des Clients</h5>
+        <p class="card-text">Accéder à la liste des clients, ajouter, modifier et supprimer des clients.</p>
+        <a href="/clients" class="btn btn-primary">Accéder aux Clients <i class="fas fa-arrow-right"></i></a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Gestion des Contrats</h5>
+        <p class="card-text">Accéder à la liste des contrats, ajouter, modifier et supprimer des contrats.</p>
+        <a href="/contracts" class="btn btn-primary">Accéder aux Contrats <i class="fas fa-arrow-right"></i></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Gestion des Clients</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+  <style>
+    body {
+      background-image: url("https://www.odcplus.com/wp-content/uploads/2023/08/Formation-ASSURANCE-Maroc.jpg");
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      color: #fff;
+      font-family: 'Arial', sans-serif;
+      display: flex;
+      align-items: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .container {
+      background-color: rgba(0, 0, 0, 0.8);
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 3rem;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+      color: #007bff;
+    }
+
+    table {
+      color: #fff;
+    }
+
+    th, td {
+      color: #fff;
+    }
+
+    .btn {
+      margin-right: 10px;
+      padding: 12px 25px;
+      font-size: 1rem;
+      border-radius: 5px;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .btn-primary {
+      background-color: #007bff;
+      border: none;
+    }
+
+    .btn-danger {
+      background-color: #dc3545;
+      border: none;
+    }
+
+    .btn-success {
+      background-color: #28a745;
+      border: none;
+    }
+
+    .btn-secondary {
+      background-color: #6c757d;
+      border: none;
+    }
+
+    #searchBar {
+      width: 100%;
+      padding: 10px;
+      border-radius: 5px;
+      background-color: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      border: 1px solid #007bff;
+      margin-bottom: 20px;
+    }
+
+    #searchBar::placeholder {
+      color: #ccc;
+    }
+
+    .modal-content {
+      background-color: #212529;
+      color: #fff;
+      border: 1px solid #fff;
+      border-radius: 10px;
+    }
+
+    .modal-header {
+      background-color: #dc3545;
+      border-radius: 10px 10px 0 0;
+    }
+
+    .modal-header .close {
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1 class="mt-4">Liste des Clients</h1>
+
+  <input type="text" id="searchBar" class="form-control" placeholder="Rechercher par nom et prénom">
+
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th>Nom</th>
+      <th>Prénom</th>
+      <th>Email</th>
+      <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody id="clientTable">
+    <tr th:each="client : ${clients}">
+      <td th:text="${client.nom}"></td>
+      <td th:text="${client.prenom}"></td>
+      <td th:text="${client.email}"></td>
+      <td>
+        <a th:href="@{/edit-client/{id}(id=${client.id})}" class="btn btn-primary">Modifier</a>
+        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal"
+                th:data-id="${client.id}" th:data-name="${client.nom} + ' ' + ${client.prenom}">
+          Supprimer
+        </button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <a href="/add-client" class="btn btn-success">Ajouter un client</a>
+  <a href="/" class="btn btn-secondary">Accueil</a>
+
+  <!-- Delete Confirmation Modal -->
+  <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteModalLabel">Confirmer la suppression</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          Êtes-vous sûr de vouloir supprimer <strong id="clientName"></strong> ?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+          <a id="confirmDelete" class="btn btn-danger" href="#">Supprimer</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+  $(document).ready(function () {
+    $("#searchBar").on("keyup", function () {
+      var value = $(this).val().toLowerCase();
+      $("#clientTable tr").filter(function () {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+      });
+    });
+
+    $('#deleteModal').on('show.bs.modal', function (event) {
+      var button = $(event.relatedTarget);
+      var id = button.data('id');
+      var name = button.data('name');
+
+      $('#clientName').text(name);  // Show client name in modal
+      $('#confirmDelete').attr('href', '/delete-client/' + id);  // Set the delete URL dynamically
+    });
+  });
+</script>
+</body>
+</html>

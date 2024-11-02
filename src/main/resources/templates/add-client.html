@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Ajouter un Client</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+  <style>
+    body {
+      background-image: url("/pixelcut-export.jpeg"); /* Updated to use the image from the static folder */
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      color: #fff;
+      font-family: 'Arial', sans-serif;
+      display: flex;
+      align-items: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .container {
+      background-color: rgba(0, 0, 0, 0.7);
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 40px;
+      font-size: 3rem;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+      color: #007bff;
+    }
+
+    .card-group {
+      margin-bottom: 30px;
+    }
+
+    .card {
+      background-color: rgba(255, 255, 255, 0.2);
+      border: 1px solid #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+    }
+
+    .card-body {
+      color: #fff;
+      padding: 20px;
+    }
+
+    .card-title {
+      font-size: 1.8rem;
+      margin-bottom: 15px;
+      color: #007bff;
+    }
+
+    .card-text {
+      color: #fff;
+    }
+
+    .btn {
+      padding: 12px 25px;
+      font-size: 1rem;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-primary {
+      background-color: #007bff;
+      border: none;
+    }
+
+    .btn-primary:hover {
+      background-color: #0056b3;
+    }
+
+    .btn-secondary {
+      background-color: #6c757d;
+      border: none;
+    }
+
+    .btn-secondary:hover {
+      background-color: #5a6268;
+    }
+
+    /* Modal Styling */
+    .modal-dialog {
+      max-width: 500px; /* Adjust modal width as needed */
+      margin: 1.75rem auto;
+    }
+
+    .modal-content {
+      background-color: #212529; /* Dark gray background */
+      color: #fff;
+      border: 1px solid #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .modal-header {
+      background-color: #dc3545; /* Red color for warning */
+      border-bottom: 1px solid #fff;
+      border-radius: 10px 10px 0 0; /* Rounded top corners */
+    }
+
+    .modal-header .close {
+      color: #fff; /* White close button */
+      opacity: 1;
+      text-shadow: none;
+    }
+
+    .modal-body {
+      padding: 20px;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1 class="mt-4">Ajouter un Client</h1>
+
+  <form th:action="@{/add-client}" method="POST" th:object="${client}">
+    <div class="form-group">
+      <label for="nom">Nom :</label>
+      <input type="text" th:field="*{nom}" class="form-control" id="nom" placeholder="Nom">
+    </div>
+    <div class="form-group">
+      <label for="prenom">Prénom :</label>
+      <input type="text" th:field="*{prenom}" class="form-control" id="prenom" placeholder="Prénom">
+    </div>
+    <div class="form-group">
+      <label for="email">Email :</label>
+      <input type="email" th:field="*{email}" class="form-control" id="email" placeholder="Email">
+    </div>
+    <div class="form-group">
+      <label for="motDePasse">Mot de passe :</label>
+      <input type="password" th:field="*{motDePasse}" class="form-control" id="motDePasse" placeholder="Mot de passe">
+    </div>
+
+    <button type="submit" class="btn btn-primary">Enregistrer</button>
+    <a href="/clients" class="btn btn-secondary">Annuler</a>
+    <a href="/" class="btn btn-secondary">Accueil</a>  <!-- Button to go back to the home page -->
+  </form>
+</div>
+
+<!-- Modal for Delete Confirmation -->
+<div class="modal fade" id="deleteConfirmationModal" tabindex="-1" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteConfirmationModalLabel">Confirmation de Suppression</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Êtes-vous sûr de vouloir supprimer ce client ? Cette action est irréversible.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+        <button type="button" class="btn btn-danger">Supprimer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
